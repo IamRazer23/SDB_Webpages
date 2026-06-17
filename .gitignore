@@ -1,0 +1,12 @@
+# --- Claude Code: configuración personal (no versionar) ---
+.claude/settings.local.json
+
+# --- Archivos del sistema operativo ---
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# --- Editores / IDE ---
+.idea/
+*.swp
+*~

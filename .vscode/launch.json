@@ -1,0 +1,19 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Abrir SD Biosensor Panamá (Chrome)",
+      "type": "chrome",
+      "request": "launch",
+      "url": "http://localhost:8083",
+      "webRoot": "${workspaceFolder}/sdbiosensor-panama/public"
+    },
+    {
+      "name": "Abrir SD Biosensor Panamá (Edge)",
+      "type": "msedge",
+      "request": "launch",
+      "url": "http://localhost:8083",
+      "webRoot": "${workspaceFolder}/sdbiosensor-panama/public"
+    }
+  ]
+}

@@ -1,0 +1,71 @@
+name: Deploy estático (Cloudflare Pages)
+
+# Genera el sitio estático desde Laravel (leyendo Supabase) y lo publica en
+# Cloudflare Pages. Cada branch obtiene su propia URL de preview;
+# `main` es producción. Así manejas versiones por branch de GitHub.
+
+on:
+  push:
+    branches: ['**']        # cualquier branch → su propio preview
+  workflow_dispatch:         # permite lanzarlo a mano
+
+permissions:
+  contents: read
+  deployments: write
+
+concurrency:
+  group: pages-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: PHP 8.3
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.3'
+          extensions: pdo_pgsql, pgsql, mbstring, bcmath, gd, zip
+
+      - name: Composer install
+        run: composer install --no-interaction --prefer-dist --optimize-autoloader
+
+      - name: Node + build de assets
+        run: npm ci && npm run build
+
+      - name: Generar sitio estático (lee Supabase)
+        env:
+          APP_ENV: production
+          APP_DEBUG: 'false'
+          APP_KEY: ${{ secrets.APP_KEY }}
+          APP_URL: ${{ vars.SITE_URL }}
+          # Supabase (solo lectura en build). Definir en GitHub → Settings → Secrets.
+          DB_CONNECTION: pgsql
+          DB_HOST: ${{ secrets.DB_HOST }}
+          DB_PORT: '5432'
+          DB_DATABASE: postgres
+          DB_USERNAME: ${{ secrets.DB_USERNAME }}
+          DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+          DB_SSLMODE: require
+          CACHE_STORE: array
+          SESSION_DRIVER: array
+          # Sin Sentry en el build estático (no hay runtime PHP en producción).
+          SENTRY_LARAVEL_DSN: ''
+        run: |
+          php artisan config:clear
+          php artisan export
+
+      - name: Cabeceras de seguridad para Pages
+        run: cp infra/cloudflare/_headers dist/_headers || true
+
+      - name: Publicar en Cloudflare Pages
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          command: >-
+            pages deploy dist
+            --project-name=sdbiosensor-panama
+            --branch=${{ github.ref_name }}

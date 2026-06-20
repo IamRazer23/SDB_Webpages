@@ -2,6 +2,9 @@
 
 @section('title', 'SD Biosensor Panamá — Diagnóstico Rápido de Alta Calidad')
 
+{{-- Activa el scroll-snap por sección (solo en el home) --}}
+@section('html_class', 'snap-home')
+
 @section('content')
 
 {{-- ============================================================
@@ -100,11 +103,6 @@
         <button class="hero-dot active" data-slide="0" aria-label="Slide 1"></button>
         <button class="hero-dot" data-slide="1" aria-label="Slide 2"></button>
         <button class="hero-dot" data-slide="2" aria-label="Slide 3"></button>
-    </div>
-
-    {{-- Scroll hint --}}
-    <div class="hero-scroll-hint">
-        <span>⌄ Desplazar</span>
     </div>
 </section>
 

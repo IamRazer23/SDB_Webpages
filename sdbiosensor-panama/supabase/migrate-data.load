@@ -1,0 +1,44 @@
+/* ============================================================
+   Migración de DATOS MySQL → PostgreSQL (Supabase) con pgloader.
+   Solo necesario si la BD contiene contenido real más allá de los
+   seeders. Si los datos == seeders, basta `php artisan migrate --seed`
+   apuntando a Supabase (ver docs/MIGRATION.md §3).
+
+   Uso:
+     pgloader supabase/migrate-data.load
+
+   Requisitos:
+     - El esquema ya creado en Supabase por `php artisan migrate`.
+     - Carga SOLO datos (no recrea tablas ni índices) → cero pérdida.
+   ============================================================ */
+
+LOAD DATABASE
+     FROM      mysql://sdb:secret@127.0.0.1:3306/sdbiosensor_panama
+     INTO      postgresql://postgres:[PASSWORD]@db.[PROJECT-REF].supabase.co:5432/postgres
+
+ WITH data only,
+      create no tables,
+      create no indexes,
+      truncate,
+      disable triggers,
+      preserve index names,
+      workers = 4, concurrency = 1
+
+ SET work_mem to '64MB', maintenance_work_mem to '256MB'
+
+ CAST type tinyint when (= precision 1) to boolean drop typemod using tinyint-to-boolean,
+      type json to jsonb,
+      type year to integer
+
+ INCLUDING ONLY TABLE NAMES MATCHING
+      'product_categories', 'products', 'news_categories',
+      'news_items', 'catalogs', 'downloads'
+
+ AFTER LOAD DO
+   $$ select setval(pg_get_serial_sequence('public.product_categories','id'), coalesce((select max(id) from public.product_categories), 1)); $$,
+   $$ select setval(pg_get_serial_sequence('public.products','id'),           coalesce((select max(id) from public.products), 1)); $$,
+   $$ select setval(pg_get_serial_sequence('public.news_categories','id'),    coalesce((select max(id) from public.news_categories), 1)); $$,
+   $$ select setval(pg_get_serial_sequence('public.news_items','id'),         coalesce((select max(id) from public.news_items), 1)); $$,
+   $$ select setval(pg_get_serial_sequence('public.catalogs','id'),           coalesce((select max(id) from public.catalogs), 1)); $$,
+   $$ select setval(pg_get_serial_sequence('public.downloads','id'),          coalesce((select max(id) from public.downloads), 1)); $$
+;

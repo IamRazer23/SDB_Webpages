@@ -461,22 +461,54 @@ ul { list-style: none; }
     border-radius: 6px;
 }
 
-/* Scroll hint */
-.hero-scroll-hint {
-    position: absolute;
-    bottom: 32px;
-    left: 50%;
-    transform: translateX(-50%);
-    color: rgba(255, 255, 255, 0.7);
-    font-size: 13px;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    animation: bounce 2s infinite;
+/* ============================================================
+   FULL-PAGE POR SECCIÓN — solo en el home (clase en <html>)
+   Cada sección ocupa la pantalla completa y se navega con un
+   salto + transición a la siguiente/anterior (no scroll libre).
+   ============================================================ */
+html.snap-home,
+html.snap-home body {
+    height: 100%;
+    overflow: hidden;            /* el documento no hace scroll: navega el JS */
 }
 
-@keyframes bounce {
-    0%, 100% { transform: translate(-50%, 0); }
-    50%      { transform: translate(-50%, 10px); }
+html.snap-home #main-content {
+    position: fixed;
+    inset: 0;
+    overflow: hidden;
+    z-index: 0;                  /* navbar (1000) y FABs (800) quedan por encima */
+}
+
+/* Carril que agrupa las secciones y se traslada verticalmente */
+.fullpage-track {
+    height: 100%;
+    transition: transform 0.8s cubic-bezier(0.86, 0, 0.07, 1);
+    will-change: transform;
+}
+
+.fullpage-track > section {
+    height: 100vh;
+    overflow-y: auto;            /* scroll interno si el contenido excede la pantalla */
+    overflow-x: hidden;
+}
+
+/* Centrado vertical seguro de las secciones de contenido (no el hero) */
+.fullpage-track > section:not(.hero) {
+    display: flex;
+    flex-direction: column;
+    justify-content: safe center;
+}
+
+/* El footer (movido a la última sección) se ancla al fondo de la pantalla */
+.fullpage-track > section > .footer {
+    margin-top: auto;
+}
+
+/* Movimiento reducido: sin animación de transición */
+@media (prefers-reduced-motion: reduce) {
+    .fullpage-track {
+        transition: none;
+    }
 }
 
 /* 7. BOTONES Y BADGES
@@ -971,8 +1003,12 @@ ul { list-style: none; }
     font-size: 14px;
     font-weight: 600;
     color: var(--color-text-muted);
+    background: none;
+    border: none;
     border-bottom: 3px solid transparent;
     white-space: nowrap;
+    cursor: pointer;
+    font-family: inherit;
     transition: all var(--transition);
 }
 

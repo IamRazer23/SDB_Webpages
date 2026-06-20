@@ -11,8 +11,10 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware) {
-        //
+        // Cabeceras de seguridad globales (OWASP A05 / Clickjacking / CSP).
+        $middleware->append(\App\Http\Middleware\SecurityHeaders::class);
     })
     ->withExceptions(function (Exceptions $exceptions) {
-        //
+        // Reporta las excepciones a Sentry (error tracking + performance).
+        \Sentry\Laravel\Integration::handles($exceptions);
     })->create();

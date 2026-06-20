@@ -15,6 +15,7 @@ RUN apt-get update && apt-get install -y \
         libonig-dev \
         libxml2-dev \
         libzip-dev \
+        libpq-dev \
         default-mysql-client \
     && rm -rf /var/lib/apt/lists/*
 
@@ -22,6 +23,8 @@ RUN apt-get update && apt-get install -y \
 RUN docker-php-ext-configure gd --with-freetype --with-jpeg \
     && docker-php-ext-install -j"$(nproc)" \
         pdo_mysql \
+        pdo_pgsql \
+        pgsql \
         mbstring \
         bcmath \
         exif \

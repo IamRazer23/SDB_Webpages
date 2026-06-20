@@ -21,3 +21,6 @@ yarn-error.log
 /.nova
 /.vscode
 /.zed
+
+# Sitio estático generado (lo produce el CI)
+/dist

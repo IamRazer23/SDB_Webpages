@@ -46,6 +46,9 @@ jobs:
       - name: Composer install
         run: composer install --no-interaction --prefer-dist --optimize-autoloader
 
+      - name: Crear .env de prueba
+        run: cp .env.example .env
+
       - name: Lint (Pint)
         run: ./vendor/bin/pint --test
 

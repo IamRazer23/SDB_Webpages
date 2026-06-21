@@ -32,6 +32,11 @@ jobs:
       - name: Composer install
         run: cd sdbiosensor-panama && composer install --no-interaction --prefer-dist --optimize-autoloader
 
+      - name: Setup Node 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
       - name: Node + build de assets
         run: cd sdbiosensor-panama && npm ci && npm run build
 

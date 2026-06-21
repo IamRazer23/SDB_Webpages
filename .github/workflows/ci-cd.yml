@@ -49,7 +49,7 @@ jobs:
       - name: Crear .env de prueba
         run: |
           cp .env.example .env
-          php artisan key:generate
+          sed -i 's/^APP_KEY=$/APP_KEY=base64:t3RHRgso1sGRIy5LejXU1wKPSnJTiDVY9v1vF\/U8DcI=/' .env
 
       - name: Lint (Pint)
         run: ./vendor/bin/pint --test

@@ -47,7 +47,9 @@ jobs:
         run: composer install --no-interaction --prefer-dist --optimize-autoloader
 
       - name: Crear .env de prueba
-        run: cp .env.example .env
+        run: |
+          cp .env.example .env
+          php artisan key:generate
 
       - name: Lint (Pint)
         run: ./vendor/bin/pint --test
@@ -63,7 +65,6 @@ jobs:
           DB_USERNAME: postgres
           DB_PASSWORD: postgres
         run: |
-          php artisan key:generate
           php artisan migrate --force
           php artisan test --coverage --min=80
 

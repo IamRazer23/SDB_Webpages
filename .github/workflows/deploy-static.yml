@@ -56,6 +56,10 @@ jobs:
         run: |
           cd sdbiosensor-panama
           php artisan config:clear
+          php artisan serve --port=8000 &
+          sleep 3
+          echo "=== TEST HOME ROUTE ===" && curl -s http://localhost:8000/ | head -50 || true
+          echo "=== LARAVEL LOG ===" && cat storage/logs/laravel.log 2>/dev/null | tail -30 || true
           php artisan export
 
       - name: Cabeceras de seguridad para Pages

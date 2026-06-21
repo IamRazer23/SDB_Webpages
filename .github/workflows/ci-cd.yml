@@ -1,0 +1,150 @@
+name: CI/CD
+
+on:
+  push:
+    branches: [main]
+    tags: ['v*']
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  # ---------------------------------------------------------------
+  # 1. Build + pruebas + cobertura (regla del repo: ≥ 80%)
+  # ---------------------------------------------------------------
+  build-test:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_DB: testing
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+        ports: ['5432:5432']
+        options: >-
+          --health-cmd pg_isready --health-interval 10s
+          --health-timeout 5s --health-retries 5
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.3'
+          extensions: pdo_pgsql, mbstring, bcmath, gd, zip
+          coverage: xdebug
+
+      - name: Composer install
+        run: composer install --no-interaction --prefer-dist --optimize-autoloader
+
+      - name: Lint (Pint)
+        run: ./vendor/bin/pint --test
+
+      - name: Node build (assets)
+        run: npm ci && npm run build
+
+      - name: Tests + cobertura
+        env:
+          DB_CONNECTION: pgsql
+          DB_HOST: 127.0.0.1
+          DB_DATABASE: testing
+          DB_USERNAME: postgres
+          DB_PASSWORD: postgres
+        run: |
+          php artisan key:generate
+          php artisan migrate --force
+          php artisan test --coverage --min=80
+
+  # ---------------------------------------------------------------
+  # 2. Seguridad: dependencias + SAST + escaneo de contenedor
+  # ---------------------------------------------------------------
+  security:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: shivammathur/setup-php@v2
+        with: { php-version: '8.3' }
+
+      - name: Composer install
+        run: composer install --no-interaction --prefer-dist
+
+      - name: Auditoría de dependencias PHP (CVEs)
+        run: composer audit
+
+      - name: Auditoría de dependencias JS
+        run: npm audit --audit-level=high || true
+
+      - name: SAST (Psalm taint analysis)
+        run: |
+          composer require --dev vimeo/psalm --no-interaction || true
+          ./vendor/bin/psalm --taint-analysis || true
+
+      - name: Trivy (filesystem + secret scan)
+        uses: aquasecurity/trivy-action@master
+        with:
+          scan-type: fs
+          scanners: vuln,secret,misconfig
+          severity: CRITICAL,HIGH
+          exit-code: '1'
+
+  # ---------------------------------------------------------------
+  # 3. Build de imagen + push (solo en tags de release)
+  # ---------------------------------------------------------------
+  release-image:
+    needs: [build-test, security]
+    if: startsWith(github.ref, 'refs/tags/v')
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: docker/setup-buildx-action@v3
+      - uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - uses: docker/build-push-action@v6
+        with:
+          context: .
+          push: true
+          tags: ghcr.io/${{ github.repository }}:${{ github.ref_name }}
+          provenance: true   # firma de procedencia (integridad de la cadena)
+
+  # ---------------------------------------------------------------
+  # 4. Deploy + Sentry release + rollback automático
+  # ---------------------------------------------------------------
+  deploy:
+    needs: [release-image]
+    if: startsWith(github.ref, 'refs/tags/v')
+    runs-on: ubuntu-latest
+    environment: production
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Crear release en Sentry
+        uses: getsentry/action-release@v1
+        env:
+          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+          SENTRY_ORG: ${{ secrets.SENTRY_ORG }}
+          SENTRY_PROJECT: ${{ secrets.SENTRY_PROJECT }}
+        with:
+          version: ${{ github.ref_name }}
+          set_commits: auto
+
+      - name: Deploy (rolling) y health check
+        run: |
+          ./deploy/release.sh "${{ github.ref_name }}"
+          # Verifica /up; si falla, revierte a la versión anterior.
+          if ! curl -fsS --retry 5 --retry-delay 5 https://www.sdbiosensor.com.pa/up; then
+            echo "Health check FALLÓ → rollback automático"
+            ./deploy/rollback.sh
+            exit 1
+          fi

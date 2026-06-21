@@ -12,9 +12,9 @@ class MediaController extends Controller
         $catalogs = Catalog::orderByDesc('year')->get();
 
         $news = NewsItem::with('category')
-                        ->where('is_active', true)
-                        ->latest('published_at')
-                        ->paginate(10);
+            ->where('is_active', true)
+            ->latest('published_at')
+            ->paginate(10);
 
         return view('media.index', compact('catalogs', 'news'));
     }

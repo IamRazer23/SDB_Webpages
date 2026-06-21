@@ -14,15 +14,15 @@ class ProductCategory extends Model
     public function products(): HasMany
     {
         return $this->hasMany(Product::class)
-                    ->where('is_active', true)
-                    ->orderBy('sort_order');
+            ->where('is_active', true)
+            ->orderBy('sort_order');
     }
 
     public function featuredProducts(): HasMany
     {
         return $this->hasMany(Product::class)
-                    ->where('is_active', true)
-                    ->where('is_featured', true)
-                    ->orderBy('sort_order');
+            ->where('is_active', true)
+            ->where('is_featured', true)
+            ->orderBy('sort_order');
     }
 }

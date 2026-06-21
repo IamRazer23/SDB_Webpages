@@ -2,7 +2,6 @@
 
 use Monolog\Handler\NullHandler;
 use Monolog\Handler\StreamHandler;
-use Monolog\Handler\SyslogUdpHandler;
 use Monolog\Processor\PsrLogMessageProcessor;
 
 return [
@@ -11,58 +10,58 @@ return [
 
     'deprecations' => [
         'channel' => env('LOG_DEPRECATIONS_CHANNEL', 'null'),
-        'trace'   => env('LOG_DEPRECATIONS_TRACE', false),
+        'trace' => env('LOG_DEPRECATIONS_TRACE', false),
     ],
 
     'channels' => [
 
         'stack' => [
-            'driver'            => 'stack',
-            'channels'          => explode(',', env('LOG_STACK', 'single')),
+            'driver' => 'stack',
+            'channels' => explode(',', env('LOG_STACK', 'single')),
             'ignore_exceptions' => false,
         ],
 
         'single' => [
             'driver' => 'single',
-            'path'   => storage_path('logs/laravel.log'),
-            'level'  => env('LOG_LEVEL', 'debug'),
+            'path' => storage_path('logs/laravel.log'),
+            'level' => env('LOG_LEVEL', 'debug'),
             'replace_placeholders' => true,
         ],
 
         'daily' => [
             'driver' => 'daily',
-            'path'   => storage_path('logs/laravel.log'),
-            'level'  => env('LOG_LEVEL', 'debug'),
-            'days'   => env('LOG_DAILY_DAYS', 14),
+            'path' => storage_path('logs/laravel.log'),
+            'level' => env('LOG_LEVEL', 'debug'),
+            'days' => env('LOG_DAILY_DAYS', 14),
             'replace_placeholders' => true,
         ],
 
         'stderr' => [
-            'driver'    => 'monolog',
-            'level'     => env('LOG_LEVEL', 'debug'),
-            'handler'   => StreamHandler::class,
+            'driver' => 'monolog',
+            'level' => env('LOG_LEVEL', 'debug'),
+            'handler' => StreamHandler::class,
             'formatter' => env('LOG_STDERR_FORMATTER'),
-            'with'      => [
+            'with' => [
                 'stream' => 'php://stderr',
             ],
             'processors' => [PsrLogMessageProcessor::class],
         ],
 
         'syslog' => [
-            'driver'   => 'syslog',
-            'level'    => env('LOG_LEVEL', 'debug'),
+            'driver' => 'syslog',
+            'level' => env('LOG_LEVEL', 'debug'),
             'facility' => env('LOG_SYSLOG_FACILITY', LOG_USER),
             'replace_placeholders' => true,
         ],
 
         'errorlog' => [
             'driver' => 'errorlog',
-            'level'  => env('LOG_LEVEL', 'debug'),
+            'level' => env('LOG_LEVEL', 'debug'),
             'replace_placeholders' => true,
         ],
 
         'null' => [
-            'driver'  => 'monolog',
+            'driver' => 'monolog',
             'handler' => NullHandler::class,
         ],
 

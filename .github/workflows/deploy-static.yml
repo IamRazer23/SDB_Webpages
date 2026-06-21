@@ -37,8 +37,8 @@ jobs:
 
       - name: Generar sitio estático (lee Supabase)
         env:
-          APP_ENV: production
-          APP_DEBUG: 'false'
+          APP_ENV: local
+          APP_DEBUG: 'true'
           APP_KEY: ${{ secrets.APP_KEY }}
           APP_URL: http://localhost
           # Supabase (solo lectura en build). Definir en GitHub → Settings → Secrets.

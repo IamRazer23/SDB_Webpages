@@ -14,8 +14,8 @@ class Product extends Model
 
     protected $casts = [
         'certifications' => 'array',
-        'is_featured'    => 'boolean',
-        'is_active'      => 'boolean',
+        'is_featured' => 'boolean',
+        'is_active' => 'boolean',
     ];
 
     public function category(): BelongsTo

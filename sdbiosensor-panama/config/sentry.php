@@ -30,17 +30,17 @@ return [
     'send_default_pii' => false,
 
     'breadcrumbs' => [
-        'sql_queries'  => true,    // detecta consultas lentas / N+1
+        'sql_queries' => true,    // detecta consultas lentas / N+1
         'sql_bindings' => false,   // nunca enviar valores enlazados (PII)
-        'cache'        => true,
+        'cache' => true,
         'http_client_requests' => true,
     ],
 
     'tracing' => [
         'queue_job_transactions' => true,
-        'sql_queries'            => true,
-        'views'                  => true,
-        'default_integrations'   => true,
+        'sql_queries' => true,
+        'views' => true,
+        'default_integrations' => true,
     ],
 
     // No reportar errores en desarrollo local.

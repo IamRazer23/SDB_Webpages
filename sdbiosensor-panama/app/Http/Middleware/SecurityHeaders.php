@@ -33,15 +33,15 @@ class SecurityHeaders
             "script-src 'self'",
             "connect-src 'self' https://*.supabase.co https://*.ingest.sentry.io https://*.ingest.us.sentry.io",
             "worker-src 'self' blob:",
-            "upgrade-insecure-requests",
+            'upgrade-insecure-requests',
         ]);
 
         $headers = [
             'Content-Security-Policy' => $csp,
-            'X-Frame-Options'         => 'DENY',
-            'X-Content-Type-Options'  => 'nosniff',
-            'Referrer-Policy'         => 'strict-origin-when-cross-origin',
-            'Permissions-Policy'      => 'geolocation=(), microphone=(), camera=(), interest-cohort=()',
+            'X-Frame-Options' => 'DENY',
+            'X-Content-Type-Options' => 'nosniff',
+            'Referrer-Policy' => 'strict-origin-when-cross-origin',
+            'Permissions-Policy' => 'geolocation=(), microphone=(), camera=(), interest-cohort=()',
             'Cross-Origin-Opener-Policy' => 'same-origin',
         ];
 

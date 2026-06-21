@@ -14,12 +14,11 @@ class SupportController extends Controller
     public function index(Request $request)
     {
         $category = $request->input('categoria', 'todos');
-        $search   = $request->input('buscar');
+        $search = $request->input('buscar');
 
         // La lista completa es pequeña: se cachea una vez y se filtra en memoria
         // (evita ir a la BD remota en cada filtro/búsqueda).
-        $all = Cache::remember('downloads:all', self::CACHE_TTL, fn () =>
-            Download::query()->orderByDesc('sort_order')->get()
+        $all = Cache::remember('downloads:all', self::CACHE_TTL, fn () => Download::query()->orderByDesc('sort_order')->get()
         );
 
         $downloads = $all;

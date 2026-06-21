@@ -14,8 +14,8 @@ class NewsItem extends Model
 
     protected $casts = [
         'published_at' => 'datetime',
-        'is_featured'  => 'boolean',
-        'is_active'    => 'boolean',
+        'is_featured' => 'boolean',
+        'is_active' => 'boolean',
     ];
 
     public function category(): BelongsTo

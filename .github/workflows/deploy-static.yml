@@ -45,7 +45,11 @@ jobs:
           APP_ENV: local
           APP_DEBUG: 'true'
           APP_KEY: ${{ secrets.APP_KEY }}
-          APP_URL: http://localhost
+          # spatie/laravel-export hornea este host en TODAS las URLs absolutas
+          # que genera Laravel (@vite, route(), url(), asset()). Debe ser el
+          # dominio público https para que el CSS/JS no apunten a localhost
+          # (rotos + mixed-content). El paso siguiente las pasa a root-relative.
+          APP_URL: https://sdbiosensor-panama.pages.dev
           # Supabase (solo lectura en build). Definir en GitHub → Settings → Secrets.
           DB_CONNECTION: pgsql
           DB_HOST: ${{ secrets.DB_HOST }}
@@ -66,6 +70,20 @@ jobs:
           echo "=== TEST HOME ROUTE ===" && curl -s http://localhost:8000/ | head -50 || true
           echo "=== LARAVEL LOG ===" && cat storage/logs/laravel.log 2>/dev/null | tail -30 || true
           php artisan export
+
+      - name: URLs a root-relative (sirve desde cualquier dominio / preview)
+        # Convierte las URLs absolutas horneadas (https://sdbiosensor-panama.pages.dev/…)
+        # en rutas root-relative (/…) para que el sitio funcione igual en
+        # producción, en los previews por branch (otra URL) y con dominios propios,
+        # sin necesidad de reconstruir. No toca recursos externos (Font Awesome,
+        # Google Fonts, Supabase Storage) porque tienen otro host.
+        run: |
+          cd sdbiosensor-panama
+          find dist -type f -name '*.html' -print0 | xargs -0 sed -i \
+            -e 's|https://sdbiosensor-panama.pages.dev/|/|g' \
+            -e 's|https://sdbiosensor-panama.pages.dev|/|g'
+          echo "=== VERIFICACIÓN: enlaces de assets en el HOME ==="
+          grep -Eo '(href|src)="[^"]*app-[^"]*\.(css|js)"' dist/index.html || true
 
       - name: Cabeceras de seguridad para Pages
         run: cp sdbiosensor-panama/infra/cloudflare/_headers sdbiosensor-panama/dist/_headers || true

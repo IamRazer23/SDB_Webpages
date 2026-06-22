@@ -67,7 +67,9 @@ class ProductSeeder extends Seeder
                 'name' => 'SARS-CoV-2 Ag FIA',
                 'slug' => 'sars-cov-2-ag-fia',
                 'description' => 'Prueba cuantitativa de antígeno SARS-CoV-2 por inmunoensayo de fluorescencia.',
-                'image_path' => null,
+                // Ejemplo del flujo de medios (Opción A): archivo en
+                // public/media/productos/ y ruta relativa en image_path.
+                'image_path' => 'productos/sars-cov-2-ag-fia.jpg',
                 'certifications' => json_encode(['CE', 'KMFDS']),
                 'is_featured' => false,
                 'sort_order' => 5,

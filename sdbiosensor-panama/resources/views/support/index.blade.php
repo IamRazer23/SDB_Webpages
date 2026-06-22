@@ -84,7 +84,7 @@
                         </td>
                         <td class="td-action">
                             @if($download->file_path)
-                                <a href="{{ Storage::url($download->file_path) }}"
+                                <a href="{{ media_url($download->file_path) }}"
                                    class="btn-download"
                                    download
                                    title="Descargar {{ $download->title }}">

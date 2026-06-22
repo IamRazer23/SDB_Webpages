@@ -55,7 +55,7 @@
             <div class="news-card reveal">
                 <div class="news-card-img">
                     @if($item->image_path)
-                        <img src="{{ Storage::url($item->image_path) }}" alt="{{ $item->title }}" loading="lazy">
+                        <img src="{{ media_url($item->image_path) }}" alt="{{ $item->title }}" loading="lazy">
                     @else
                         <div class="img-placeholder news-placeholder">
                             <i class="fas fa-newspaper"></i>
@@ -83,7 +83,7 @@
     <div class="container featured-news-grid">
         <div class="featured-news-image reveal">
             @if($featuredNews->image_path)
-                <img src="{{ Storage::url($featuredNews->image_path) }}" alt="{{ $featuredNews->title }}">
+                <img src="{{ media_url($featuredNews->image_path) }}" alt="{{ $featuredNews->title }}">
             @else
                 <div class="img-placeholder featured-placeholder">
                     <i class="fas fa-star"></i>
@@ -148,7 +148,7 @@
                 </div>
                 <div class="product-image">
                     @if($product->image_path)
-                        <img src="{{ Storage::url($product->image_path) }}" alt="{{ $product->name }}" loading="lazy">
+                        <img src="{{ media_url($product->image_path) }}" alt="{{ $product->name }}" loading="lazy">
                     @else
                         <div class="img-placeholder">
                             <i class="fas fa-vial fa-2x"></i>

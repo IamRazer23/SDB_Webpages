@@ -29,7 +29,7 @@
         {{-- Imagen --}}
         <div class="product-detail-image">
             @if($product->image_path)
-                <img src="{{ Storage::url($product->image_path) }}" alt="{{ $product->name }}">
+                <img src="{{ media_url($product->image_path) }}" alt="{{ $product->name }}">
             @else
                 <div class="img-placeholder img-placeholder--large">
                     <i class="fas fa-flask fa-4x"></i>

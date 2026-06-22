@@ -36,7 +36,7 @@
             <article class="news-list-item reveal">
                 <div class="news-list-img">
                     @if($item->image_path)
-                        <img src="{{ Storage::url($item->image_path) }}" alt="{{ $item->title }}" loading="lazy">
+                        <img src="{{ media_url($item->image_path) }}" alt="{{ $item->title }}" loading="lazy">
                     @else
                         <div class="img-placeholder news-placeholder-sm">
                             <i class="fas fa-newspaper"></i>
@@ -73,7 +73,7 @@
             <div class="catalog-card reveal">
                 <div class="catalog-cover">
                     @if($catalog->cover_image_path)
-                        <img src="{{ Storage::url($catalog->cover_image_path) }}" alt="{{ $catalog->title }}" loading="lazy">
+                        <img src="{{ media_url($catalog->cover_image_path) }}" alt="{{ $catalog->title }}" loading="lazy">
                     @else
                         <div class="img-placeholder catalog-placeholder">
                             <i class="fas fa-book-open fa-3x"></i>
@@ -85,7 +85,7 @@
                     <h4>{{ $catalog->title }}</h4>
                     <span class="catalog-year">{{ $catalog->year }}</span>
                     @if($catalog->file_path)
-                        <a href="{{ Storage::url($catalog->file_path) }}" class="btn-download-catalog" download>
+                        <a href="{{ media_url($catalog->file_path) }}" class="btn-download-catalog" download>
                             <i class="fas fa-download"></i> Descargar PDF
                         </a>
                     @else

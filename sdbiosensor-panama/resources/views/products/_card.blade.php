@@ -16,7 +16,7 @@
     </div>
     <div class="product-image">
         @if($product->image_path)
-            <img src="{{ Storage::url($product->image_path) }}" alt="{{ $product->name }}" loading="lazy">
+            <img src="{{ media_url($product->image_path) }}" alt="{{ $product->name }}" loading="lazy">
         @else
             <div class="img-placeholder">
                 <i class="fas fa-flask fa-2x"></i>

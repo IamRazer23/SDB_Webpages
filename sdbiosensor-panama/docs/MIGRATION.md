@@ -99,8 +99,11 @@ preservados (`on delete cascade`), `json`→`jsonb`.
 activas; toda escritura va por la conexión privilegiada de Laravel o `service_role`. Modelo de
 acceso mínimo necesario.
 
-**Storage**: buckets `media` y `documents` (lectura pública, escritura solo `service_role`).
-Cambiar `FILESYSTEM_DISK=s3` (endpoint S3 de Supabase) → `Storage::url()` sigue funcionando.
+**Storage**: hoy las imágenes/archivos de contenido se sirven desde el repo
+(`public/media/`, resueltas con `media_url()` — ver [public/media/README.md](../public/media/README.md)).
+Si se migra a Supabase Storage (buckets `media`/`documents`, lectura pública), basta con
+guardar la **URL absoluta** del objeto en la columna (`image_path`/`file_path`): `media_url()`
+detecta `http(s)://` y la devuelve tal cual, sin tocar las vistas.
 
 **Auth (foundation)**: cuando exista admin, usar **Laravel Fortify/Breeze** (sesión server-side,
 encaja con SSR) para login/registro/recuperación/MFA TOTP; Supabase Auth queda como opción si

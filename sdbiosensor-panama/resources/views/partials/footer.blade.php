@@ -1,7 +1,7 @@
 <footer class="footer">
     <div class="container footer-grid">
         <div class="footer-brand">
-            <span class="footer-logo">⊕ SD BIOSENSOR</span>
+            <img src="/images/logo-sd-biosensor.png" alt="SD Biosensor Panamá" class="footer-logo-img">
             <p class="footer-tagline">Diagnóstico que salva vidas</p>
             <p class="footer-copy">
                 © {{ date('Y') }} SD Biosensor, INC.<br>

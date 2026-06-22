@@ -1,7 +1,7 @@
 <nav class="navbar" id="navbar">
     <div class="container nav-inner">
         <a href="{{ route('home') }}" class="logo">
-            <span class="logo-icon">⊕</span> SD BIOSENSOR
+            <img src="/images/logo-sd-biosensor.png" alt="SD Biosensor Panamá" class="logo-img">
         </a>
 
         <ul class="nav-menu" id="nav-menu">

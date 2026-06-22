@@ -13,85 +13,23 @@
 <section class="hero" id="hero">
     <div class="hero-slides" id="hero-slides">
 
-        {{-- Slide 1 --}}
-        <div class="hero-slide active">
-            <div class="container hero-inner">
-                <div class="hero-text">
-                    <p class="hero-eyebrow">Nuevo Producto</p>
-                    <h1>STANDARD M10</h1>
-                    <p class="hero-subtitle">Analizador de hematología compacto de alto rendimiento para laboratorios modernos.</p>
-                    <a href="{{ route('products.index', ['categoria' => 'standard-m']) }}" class="btn-primary">
-                        Ver Producto <i class="fas fa-arrow-right"></i>
-                    </a>
-                </div>
-                <div class="hero-panel">
-                    <h3 class="panel-title"><i class="fas fa-list-ul"></i> Menú de Ensayos</h3>
-                    <ul class="assay-list">
-                        <li><i class="fas fa-check-circle"></i> COVID-19 Antígeno</li>
-                        <li><i class="fas fa-check-circle"></i> Influenza A/B</li>
-                        <li><i class="fas fa-check-circle"></i> Malaria P.f / P.v</li>
-                        <li><i class="fas fa-check-circle"></i> Glucosa en Sangre</li>
-                        <li><i class="fas fa-check-circle"></i> Proteína C Reactiva</li>
-                        <li><i class="fas fa-check-circle"></i> Troponina I</li>
-                    </ul>
-                    <div class="hero-device-placeholder">
-                        <i class="fas fa-microscope"></i>
-                    </div>
-                </div>
-            </div>
-        </div>
+        {{-- Slide 1: STANDARD F --}}
+        <a class="hero-slide hero-banner active"
+           style="background-image: url('/images/hero/standard-f.png')"
+           href="{{ route('products.index') }}"
+           aria-label="STANDARD F — Sistema de Inmunoensayo Fluorescente"></a>
 
-        {{-- Slide 2 --}}
-        <div class="hero-slide">
-            <div class="container hero-inner">
-                <div class="hero-text">
-                    <p class="hero-eyebrow">Diagnóstico Rápido</p>
-                    <h1>COVID-19 Ag Home Test</h1>
-                    <p class="hero-subtitle">Prueba de antígeno para detección rápida de SARS-CoV-2 aprobada para uso doméstico.</p>
-                    <a href="{{ route('products.show', 'covid-19-ag-home-test') }}" class="btn-primary">
-                        Ver Producto <i class="fas fa-arrow-right"></i>
-                    </a>
-                </div>
-                <div class="hero-panel">
-                    <h3 class="panel-title"><i class="fas fa-certificate"></i> Certificaciones</h3>
-                    <ul class="assay-list">
-                        <li><i class="fas fa-award"></i> CE Marcado</li>
-                        <li><i class="fas fa-award"></i> KMFDS Aprobado</li>
-                        <li><i class="fas fa-award"></i> Resultado en 15 min</li>
-                        <li><i class="fas fa-award"></i> Sin equipo adicional</li>
-                    </ul>
-                    <div class="hero-device-placeholder">
-                        <i class="fas fa-vial"></i>
-                    </div>
-                </div>
-            </div>
-        </div>
+        {{-- Slide 2: POC in-vitro (planta SD Biosensor) --}}
+        <a class="hero-slide hero-banner"
+           style="background-image: url('/images/hero/poc-in-vitro.png')"
+           href="{{ route('research.index') }}"
+           aria-label="SD Biosensor — POC in-vitro Total Platform Company"></a>
 
-        {{-- Slide 3 --}}
-        <div class="hero-slide">
-            <div class="container hero-inner">
-                <div class="hero-text">
-                    <p class="hero-eyebrow">Presencia Global</p>
-                    <h1>Diagnóstico que salva vidas</h1>
-                    <p class="hero-subtitle">SD Biosensor opera en más de 100 países con productos aprobados por la OMS, FDA, CE y TGA.</p>
-                    <a href="{{ route('research.index') }}" class="btn-primary">
-                        Nuestra I+D <i class="fas fa-arrow-right"></i>
-                    </a>
-                </div>
-                <div class="hero-panel">
-                    <h3 class="panel-title"><i class="fas fa-globe"></i> Presencia Global</h3>
-                    <ul class="assay-list">
-                        <li><i class="fas fa-check-circle"></i> +100 países</li>
-                        <li><i class="fas fa-check-circle"></i> OMS PQ Aprobado</li>
-                        <li><i class="fas fa-check-circle"></i> FDA Autorizado</li>
-                        <li><i class="fas fa-check-circle"></i> CE Marcado</li>
-                    </ul>
-                    <div class="hero-device-placeholder">
-                        <i class="fas fa-globe-americas"></i>
-                    </div>
-                </div>
-            </div>
-        </div>
+        {{-- Slide 3: STANDARD M10 --}}
+        <a class="hero-slide hero-banner"
+           style="background-image: url('/images/hero/standard-m10.jpg')"
+           href="{{ route('products.index') }}"
+           aria-label="STANDARD M10 — Plataforma MDx Versátil Point-of-Care"></a>
     </div>
 
     {{-- Controles del carrusel --}}
